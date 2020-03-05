@@ -28,7 +28,11 @@ ruleTester.run("newline-per-chained-call", rule, {
     }],
 
     /*
+     * depthCalculationStyle: "perLine" (default)
      * ignoreChainWithDepth: 2 (default)
+     * includeBrackets: true (default)
+     * includeMethodCalls: true (default)
+     * includeProperties: false (default)
      */
     invalid: [{
         code: "_\n.chain({}).map(foo).filter(bar).value();",
@@ -174,7 +178,11 @@ ruleTester.run("newline-per-chained-call", rule, {
     },
 
     /*
+     * depthCalculationStyle: "perLine" (default)
      * ignoreChainWithDepth: 1
+     * includeBrackets: true (default)
+     * includeMethodCalls: true (default)
+     * includeProperties: false (default)
      */
     {
         code: "foo.bar()['foo' + \u2029 + 'bar']()",
@@ -204,12 +212,20 @@ ruleTester.run("newline-per-chained-call", rule, {
     },
 
     /*
-     * maxTotalChainDepth: 1
+     * depthCalculationStyle: "all"
+     * ignoreChainWithDepth: 1
+     * includeBrackets: true (default)
+     * includeMethodCalls: true (default)
+     * includeProperties: true
      */
     {
         code: "_\n.chain({}).map(foo).filter(bar).value();",
         output: "_\n.chain({})\n.map(foo)\n.filter(bar)\n.value();",
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
         errors: [{
             messageId: "expectedLineBreak", data: { propertyName: ".map" }
         }, {
@@ -220,14 +236,22 @@ ruleTester.run("newline-per-chained-call", rule, {
     }, {
         code: "_\n.chain({})\n.map(foo)\n.filter(bar).value();",
         output: "_\n.chain({})\n.map(foo)\n.filter(bar)\n.value();",
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
         errors: [{
             messageId: "expectedLineBreak", data: { propertyName: ".value" }
         }]
     }, {
         code: "a().b().c().e.d()",
         output: "a()\n.b()\n.c()\n.e\n.d()",
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
         errors: [{
             messageId: "expectedLineBreak", data: { propertyName: ".b" }
         }, {
@@ -240,7 +264,11 @@ ruleTester.run("newline-per-chained-call", rule, {
     }, {
         code: "a.b.c().e().d()",
         output: "a\n.b\n.c()\n.e()\n.d()",
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
         errors: [{
             messageId: "expectedLineBreak", data: { propertyName: ".b" }
         }, {
@@ -253,7 +281,11 @@ ruleTester.run("newline-per-chained-call", rule, {
     }, {
         code: "_.chain({}).map(a).value(); ",
         output: "_\n.chain({})\n.map(a)\n.value(); ",
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
         errors: [{
             messageId: "expectedLineBreak", data: { propertyName: ".chain" }
         }, {
@@ -264,7 +296,11 @@ ruleTester.run("newline-per-chained-call", rule, {
     }, {
         code: "var a = m1.m2();\nvar b = m1.m2().m3().m4().m5();",
         output: "var a = m1.m2();\nvar b = m1\n.m2()\n.m3()\n.m4()\n.m5();",
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
         errors: [{
             messageId: "expectedLineBreak", data: { propertyName: ".m2" }
         }, {
@@ -277,7 +313,11 @@ ruleTester.run("newline-per-chained-call", rule, {
     }, {
         code: "var a = m1.m2();\nvar b = m1.m2().m3()\n.m4().m5();",
         output: "var a = m1.m2();\nvar b = m1\n.m2()\n.m3()\n.m4()\n.m5();",
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
         errors: [{
             messageId: "expectedLineBreak", data: { propertyName: ".m2" }
         }, {
@@ -288,7 +328,11 @@ ruleTester.run("newline-per-chained-call", rule, {
     }, {
         code: "var a = m1().m2\n.m3().m4().m5().m6().m7();",
         output: "var a = m1()\n.m2\n.m3()\n.m4()\n.m5()\n.m6()\n.m7();",
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
         errors: [{
             messageId: "expectedLineBreak", data: { propertyName: ".m2" }
         }, {
@@ -363,7 +407,11 @@ ruleTester.run("newline-per-chained-call", rule, {
             "})",
             ".end();"
         ].join("\n"),
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
         errors: [{
             messageId: "expectedLineBreak", data: { propertyName: ".request" }
         }, {
@@ -382,11 +430,117 @@ ruleTester.run("newline-per-chained-call", rule, {
         output: [
             "anObject",
             ".method1()",
+            ".method2()",
+            "['method' + n]()",
+            "[aCondition ?",
+            "    'method3' :",
+            "    'method4']()"
+        ].join("\n"),
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
+        errors: [{
+            messageId: "expectedLineBreak", data: { propertyName: ".method1" }
+        }, {
+            messageId: "expectedLineBreak", data: { propertyName: ".method2" }
+        }, {
+            messageId: "expectedLineBreak", data: { propertyName: "['method' + n]" }
+        }, {
+            messageId: "expectedLineBreak", data: { propertyName: "[aCondition ?" }
+        }]
+    }, {
+        code: "foo.bar()['foo' + \u2029 + 'bar']()",
+        output: null,
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
+        errors: []
+    }, {
+        code: "foo.bar()[(biz)]()",
+        output: null,
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
+        errors: []
+    }, {
+        code: "(foo).bar().biz()",
+        output: "(foo)\n.bar()\n.biz()",
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
+        errors: [
+            { messageId: "expectedLineBreak", data: { propertyName: ".bar" } },
+            { messageId: "expectedLineBreak", data: { propertyName: ".biz" } }
+        ]
+    }, {
+        code: "foo.bar(). /* comment */ biz()",
+        output: "foo\n.bar()\n. /* comment */ biz()",
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
+        errors: [
+            { messageId: "expectedLineBreak", data: { propertyName: ".bar" } },
+            { messageId: "expectedLineBreak", data: { propertyName: ".biz" } }
+        ]
+    }, {
+        code: "foo.bar() /* comment */ .biz()",
+        output: "foo\n.bar() /* comment */ \n.biz()",
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
+        errors: [
+            { messageId: "expectedLineBreak", data: { propertyName: ".bar" } },
+            { messageId: "expectedLineBreak", data: { propertyName: ".biz" } }
+        ]
+    }, {
+        code: "foo\n.bar() /* comment */ .biz()",
+        output: "foo\n.bar() /* comment */ \n.biz()",
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeProperties: true
+        }],
+        errors: [{ messageId: "expectedLineBreak", data: { propertyName: ".biz" } }]
+    },
+
+    /*
+     * depthCalculationStyle: "all"
+     * ignoreChainWithDepth: 2
+     * includeBrackets: "false"
+     * includeMethodCalls: true (default)
+     * includeProperties: true
+     */
+    {
+        code: [
+            "anObject.method1().method2()['method' + n]()[aCondition ?",
+            "    'method3' :",
+            "    'method4']()"
+        ].join("\n"),
+        output: [
+            "anObject",
+            ".method1()",
             ".method2()['method' + n]()[aCondition ?",
             "    'method3' :",
             "    'method4']()"
         ].join("\n"),
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeBrackets: false,
+            includeProperties: true
+        }],
         errors: [{
             messageId: "expectedLineBreak", data: { propertyName: ".method1" }
         }, {
@@ -395,17 +549,32 @@ ruleTester.run("newline-per-chained-call", rule, {
     }, {
         code: "foo.bar()['foo' + \u2029 + 'bar']()",
         output: null,
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeBrackets: false,
+            includeProperties: true
+        }],
         errors: []
     }, {
         code: "foo.bar()[(biz)]()",
         output: null,
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeBrackets: false,
+            includeProperties: true
+        }],
         errors: []
     }, {
         code: "(foo).bar().biz()",
         output: "(foo)\n.bar()\n.biz()",
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeBrackets: false,
+            includeProperties: true
+        }],
         errors: [
             { messageId: "expectedLineBreak", data: { propertyName: ".bar" } },
             { messageId: "expectedLineBreak", data: { propertyName: ".biz" } }
@@ -413,7 +582,12 @@ ruleTester.run("newline-per-chained-call", rule, {
     }, {
         code: "foo.bar(). /* comment */ biz()",
         output: "foo\n.bar()\n. /* comment */ biz()",
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeBrackets: false,
+            includeProperties: true
+        }],
         errors: [
             { messageId: "expectedLineBreak", data: { propertyName: ".bar" } },
             { messageId: "expectedLineBreak", data: { propertyName: ".biz" } }
@@ -421,7 +595,12 @@ ruleTester.run("newline-per-chained-call", rule, {
     }, {
         code: "foo.bar() /* comment */ .biz()",
         output: "foo\n.bar() /* comment */ \n.biz()",
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeBrackets: false,
+            includeProperties: true
+        }],
         errors: [
             { messageId: "expectedLineBreak", data: { propertyName: ".bar" } },
             { messageId: "expectedLineBreak", data: { propertyName: ".biz" } }
@@ -429,42 +608,81 @@ ruleTester.run("newline-per-chained-call", rule, {
     }, {
         code: "foo\n.bar() /* comment */ .biz()",
         output: "foo\n.bar() /* comment */ \n.biz()",
-        options: [{ maxTotalChainDepth: 1 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 1,
+            includeBrackets: false,
+            includeProperties: true
+        }],
         errors: [{ messageId: "expectedLineBreak", data: { propertyName: ".biz" } }]
     },
 
     /*
-     * maxTotalChainDepth: 2
+     * depthCalculationStyle: "all"
+     * ignoreChainWithDepth: 2
+     * includeBrackets: "false"
+     * includeMethodCalls: true (default)
+     * includeProperties: true
      */
     {
         code: "foo.bar()['foo' + \u2029 + 'bar']()",
         output: null,
-        options: [{ maxTotalChainDepth: 2 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 2,
+            includeBrackets: false,
+            includeProperties: true
+        }],
         errors: []
     }, {
         code: "foo.bar()[(biz)]()",
         output: null,
-        options: [{ maxTotalChainDepth: 2 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 2,
+            includeBrackets: false,
+            includeProperties: true
+        }],
         errors: []
     }, {
         code: "(foo).bar().biz()",
         output: null,
-        options: [{ maxTotalChainDepth: 2 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 2,
+            includeBrackets: false,
+            includeProperties: true
+        }],
         errors: []
     }, {
         code: "foo.bar(). /* comment */ biz()",
         output: null,
-        options: [{ maxTotalChainDepth: 2 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 2,
+            includeBrackets: false,
+            includeProperties: true
+        }],
         errors: []
     }, {
         code: "foo.bar() /* comment */ .biz()",
         output: null,
-        options: [{ maxTotalChainDepth: 2 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 2,
+            includeBrackets: false,
+            includeProperties: true
+        }],
         errors: []
     }, {
         code: "foo\n.bar() /* comment */ .biz()",
         output: null,
-        options: [{ maxTotalChainDepth: 2 }],
+        options: [{
+            depthCalculationStyle: "all",
+            ignoreChainWithDepth: 2,
+            includeBrackets: false,
+            includeProperties: true
+        }],
         errors: []
     }]
 });
