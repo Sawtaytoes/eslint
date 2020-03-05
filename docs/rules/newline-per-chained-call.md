@@ -1,14 +1,14 @@
-# require a newline after each call in a method chain (newline-per-chained-call)
+# Require a newline after each call in a method chain (newline-per-chained-call)
 
 Chained method calls on a single line without line breaks are harder to read, so some developers place a newline character after each method call in the chain to make it more readable and easy to maintain.
 
-Let's look at the following perfectly valid (but single line) code.
+Let's look at the following perfectly valid (but single line) code:
 
 ```js
 d3.select("body").selectAll("p").data([4, 8, 15, 16, 23, 42 ]).enter().append("p").text(function(d) { return "I'm number " + d + "!"; });
 ```
 
-However, with appropriate new lines, it becomes easy to read and understand. Look at the same code written below with line breaks after each call.
+However, with appropriate new lines, it becomes easy to read and understand. Look at the same code written below with line breaks after each call:
 
 ```js
 d3
@@ -29,7 +29,7 @@ d3
     });
 ```
 
-Another argument in favor of this style is that it improves the clarity of diffs when something in the method chain is changed:
+Another argument in favor of this style is that it improves the clarity of diffs when something in the method chain is changed.
 
 Less clear:
 
@@ -44,8 +44,8 @@ More clear:
 d3
     .select("body")
     .selectAll("p")
--    .style("color", "white");
-+    .style("color", "blue");
+-   .style("color", "white");
++   .style("color", "blue");
 ```
 
 ## Rule Details
@@ -54,9 +54,10 @@ This rule requires a newline after each call in a method chain or deep member ac
 
 ## Options
 
-This rule has an object option:
+This rule has an object option, but the configuration value has to be either `ignoreChainWithDepth` or `maxTotalChainDepth`:
 
-* `"ignoreChainWithDepth"` (default: `2`) allows chains up to a specified depth.
+* `"ignoreChainWithDepth"` (default: `2`) allows chains of calls up to a specified depth.
+* `"maxTotalChainDepth"` (default: `null`) allows chains up to a specified depth. Once their depth exceeds this value, all chained properties a dropped to newlines.
 
 ### ignoreChainWithDepth
 
@@ -111,6 +112,67 @@ obj
   .prop.method()
   .method2()
   .method3().prop;
+```
+
+### maxTotalChainDepth
+
+Examples of **incorrect** code for this rule with `{ "maxTotalChainDepth": 1 }` option:
+
+```js
+/*eslint newline-per-chained-call: ["error", { "maxTotalChainDepth": 1 }]*/
+
+_.chain({}).map(foo).filter(bar).value();
+
+// Or
+_.chain({}).map(foo).filter(bar);
+
+// Or
+_
+  .chain({}).map(foo)
+  .filter(bar);
+
+// Or
+obj.method().method2().method3();
+```
+
+Examples of **correct** code for this rule with the default `{ "maxTotalChainDepth": 1 }` option:
+
+```js
+/*eslint newline-per-chained-call: ["error", { "maxTotalChainDepth": 1 }]*/
+
+Object.keys(object)
+
+// Or
+_
+  .chain({})
+  .map(foo)
+  .filter(bar)
+  .value();
+
+// Or
+_
+  .chain({})
+  .map(foo)
+  .filter(bar);
+
+// Or
+_.chain({})
+  .map(foo)
+  .filter(bar);
+
+// Or
+obj
+  .prop
+  .method()
+  .prop;
+
+// Or
+obj
+  .prop
+  .method()
+  .method2()
+  .method3()
+  .prop;
 ```
 
 ## When Not To Use It
