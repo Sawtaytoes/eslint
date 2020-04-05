@@ -1112,5 +1112,151 @@ ruleTester.run("newline-per-chained-call", rule, {
         errors: [{
             messageId: "expectedLineBreak", data: { propertyName: ".forEach" }
         }]
+    },
+
+    /*
+     * depthCalculationStyle: "trailingMembers"
+     * ignoreChainWithDepth: 2 (default)
+     * includeBracketedProperties: true (default)
+     * includeMethodCalls: true
+     * includeProperties: false
+     * multilineBreakStyle: "object"
+     */
+    {
+        code: "test ? condition : [1, 2, 3].forEach(func)",
+        output: null,
+        options: [{
+            multilineBreakStyle: "object"
+        }],
+        errors: []
+    }, {
+        code: "test ? condition : [1, 2, 3].map(func).filter(Boolean)",
+        output: null,
+        options: [{
+            multilineBreakStyle: "object"
+        }],
+        errors: []
+    }, {
+        code: "test ? condition : [1, 2, 3]\n.map(func).filter(Boolean)",
+        output: null,
+        options: [{
+            multilineBreakStyle: "object"
+        }],
+        errors: []
+    }, {
+        code: "test ? condition : [1, 2, 3].map(func)\n.filter(Boolean)",
+        output: null,
+        options: [{
+            multilineBreakStyle: "object"
+        }],
+        errors: []
+    }, {
+        code: "test ? condition : [1, 2, 3].map(func).filter(Boolean).length\n.toString().toValue()",
+        output: null,
+        options: [{
+            multilineBreakStyle: "object"
+        }],
+        errors: []
+    }, {
+        code: "test ? condition : [1, 2, 3].map(func).filter(Boolean)[\n'length'\n].toString().toValue()",
+        output: "test ? condition : [1, 2, 3].map(func).filter(Boolean)[\n'length'\n]\n.toString().toValue()",
+        options: [{
+            multilineBreakStyle: "object"
+        }],
+        errors: []
+    }, {
+        code: "test ? condition : [1, 2, 3].forEach(function() {\n  return\n})",
+        output: null,
+        options: [{
+            multilineBreakStyle: "object"
+        }],
+        errors: []
+    }, {
+        code: "test ? condition : [\n  1,\n  2,\n  3\n].forEach(func)",
+        output: null,
+        options: [{
+            multilineBreakStyle: "object"
+        }],
+        errors: []
+    }, {
+        code: "test ? condition : [1, 2, 3].map(function() {\n  return\n}).filter(Boolean)",
+        output: null,
+        options: [{
+            multilineBreakStyle: "object"
+        }],
+        errors: []
+    },
+
+    /*
+     * depthCalculationStyle: "trailingMembers"
+     * ignoreChainWithDepth: 2 (default)
+     * includeBracketedProperties: true (default)
+     * includeMethodCalls: true
+     * includeProperties: false
+     * multilineBreakStyle: "statement"
+     */
+    {
+        code: "test ? condition : [1, 2, 3].forEach(func)",
+        output: null,
+        options: [{
+            multilineBreakStyle: "statement"
+        }],
+        errors: []
+    }, {
+        code: "test ? condition : [1, 2, 3].map(func).filter(Boolean)",
+        output: null,
+        options: [{
+            multilineBreakStyle: "statement"
+        }],
+        errors: []
+    }, {
+        code: "test ? condition : [1, 2, 3]\n.map(func).filter(Boolean)",
+        output: "test ? condition : [1, 2, 3]\n.map(func)\n.filter(Boolean)",
+        options: [{
+            multilineBreakStyle: "statement"
+        }],
+        errors: [{
+            messageId: "expectedLineBreak", data: { propertyName: ".filter" }
+        }]
+    }, {
+        code: "test ? condition : [1, 2, 3].map(func)\n.filter(Boolean)",
+        output: "test ? condition : [1, 2, 3]\n.map(func)\n.filter(Boolean)",
+        options: [{
+            multilineBreakStyle: "statement"
+        }],
+        errors: [{
+            messageId: "expectedLineBreak", data: { propertyName: ".map" }
+        }]
+    }, {
+        code: "test ? condition : [1, 2, 3].map(func).filter(Boolean).length\n.toString().toValue()",
+        output: "test ? condition : [1, 2, 3]\n.map(func)\n.filter(Boolean).length\n.toString()\n.toValue()",
+        options: [{
+            multilineBreakStyle: "statement"
+        }],
+        errors: [{
+            messageId: "expectedLineBreak", data: { propertyName: ".map" }
+        }, {
+            messageId: "expectedLineBreak", data: { propertyName: ".filter" }
+        }, {
+            messageId: "expectedLineBreak", data: { propertyName: ".toValue" }
+        }]
+    }, {
+        code: "test ? condition : [1, 2, 3].forEach(function() {\n  return\n})",
+        output: "test ? condition : [1, 2, 3]\n.forEach(function() {\n  return\n})",
+        options: [{
+            multilineBreakStyle: "statement"
+        }],
+        errors: [{
+            messageId: "expectedLineBreak", data: { propertyName: ".forEach" }
+        }]
+    }, {
+        code: "test ? condition : [\n  1,\n  2,\n  3\n].forEach(func)",
+        output: "test ? condition : [\n  1,\n  2,\n  3\n]\n.forEach(func)",
+        options: [{
+            multilineBreakStyle: "statement"
+        }],
+        errors: [{
+            messageId: "expectedLineBreak", data: { propertyName: ".forEach" }
+        }]
     }]
 });
